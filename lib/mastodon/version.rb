@@ -13,7 +13,7 @@ module Mastodon
     end
 
     def patch
-      5
+      7
     end
 
     def flags
@@ -21,7 +21,7 @@ module Mastodon
     end
 
     def suffix
-      '+3.5.2'
+      '+3.5.4'
     end
 
     def to_a
