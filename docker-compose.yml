@@ -25,7 +25,7 @@ services:
 
   web:
     build: .
-    image: tootsuite/mastodon:v3.4.6
+    image: tootsuite/mastodon:v3.5.5
     restart: always
     env_file:
       - .env.production
@@ -54,7 +54,7 @@ services:
 
   streaming:
     build: .
-    image: tootsuite/mastodon:v3.4.6
+    image: tootsuite/mastodon:v3.5.5
     restart: always
     env_file:
       - .env.production
@@ -83,7 +83,7 @@ services:
 
   sidekiq:
     build: .
-    image: tootsuite/mastodon:v3.4.6
+    image: tootsuite/mastodon:v3.5.5
     restart: always
     env_file:
       - .env.production
