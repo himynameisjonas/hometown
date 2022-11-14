@@ -25,6 +25,7 @@
 .env
 .env.production
 .env.development
+db.env
 /node_modules/
 /build/
 
