@@ -41,7 +41,7 @@ $small-breakpoint: 960px;
 
   p {
     margin-top: 0;
-    margin-bottom: .85em;
+    margin-bottom: 0.85em;
 
     &:last-child {
       margin-bottom: 0;
@@ -73,7 +73,7 @@ $small-breakpoint: 960px;
   h6 {
     font-family: $font-display, sans-serif;
     margin-top: 1.275em;
-    margin-bottom: .85em;
+    margin-bottom: 0.85em;
     font-weight: 500;
     color: $secondary-text-color;
   }
@@ -163,12 +163,12 @@ $small-breakpoint: 960px;
     th,
     td {
       padding: 8px;
-      align-self: start;
-      align-items: start;
+      align-self: flex-start;
+      align-items: flex-start;
       word-break: break-all;
 
       &.nowrap {
-        width: 25%;
+        width: 50%;
         position: relative;
 
         &::before {
@@ -181,8 +181,7 @@ $small-breakpoint: 960px;
           left: 8px;
           right: 8px;
           white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
+          overflow: scroll;
         }
       }
     }
@@ -191,6 +190,27 @@ $small-breakpoint: 960px;
   & > :first-child {
     margin-top: 0;
   }
+}
+
+.brand {
+  position: relative;
+  text-decoration: none;
+  color: $secondary-text-color;
+}
+
+a.brand {
+  color: $primary-text-color;
+}
+
+h1 a.brand {
+  color: $secondary-text-color;
+  font-size: 3.8em;
+}
+
+.originalmascotimg svg {
+  width: 200px;
+  fill: $secondary-text-color;
+  margin-top: -25px;
 }
 
 .information-board {
@@ -401,6 +421,10 @@ $small-breakpoint: 960px;
     font-family: $font-display, sans-serif;
     font-size: 12px;
     line-height: 24px;
+    position: relative;
+    border-bottom: 1px solid lighten($ui-base-color, 8%);
+    padding: 1em 1.75em;
+    padding-left: 3em;
     font-weight: 500;
     margin-bottom: 20px;
     color: $secondary-text-color;
@@ -436,7 +460,7 @@ $small-breakpoint: 960px;
     width: 100%;
     height: 0;
     border: 0;
-    border-bottom: 1px solid rgba($ui-base-lighter-color, .6);
+    border-bottom: 1px solid rgba($ui-base-lighter-color, 0.6);
     margin: 20px 0;
 
     &.spacer {
@@ -476,7 +500,7 @@ $small-breakpoint: 960px;
         padding: 0 10px;
       }
 
-      @media screen and (max-width: $no-gap-breakpoint) {
+      @media screen and (max-width: $no-gap-breakpoint-static) {
         width: 100%;
         justify-content: space-between;
       }
@@ -486,7 +510,7 @@ $small-breakpoint: 960px;
       flex: 1;
       margin: 10px -50px 0 0;
 
-      @media screen and (max-width: $no-gap-breakpoint) {
+      @media screen and (max-width: $no-gap-breakpoint-static) {
         display: none;
       }
     }
@@ -511,7 +535,6 @@ $small-breakpoint: 960px;
     }
 
     strong {
-      font-weight: 500;
       color: lighten($darker-text-color, 10%);
     }
 
@@ -575,10 +598,10 @@ $small-breakpoint: 960px;
     height: 104px;
     position: relative;
     left: -40px;
-    bottom: 25px;
+    bottom: 37px;
 
     img {
-      height: 155px;
+      height: 190px;
       width: auto;
     }
   }
@@ -587,6 +610,7 @@ $small-breakpoint: 960px;
     .row {
       display: flex;
       flex-wrap: wrap;
+      justify-content: center;
       align-items: center;
       margin-bottom: 40px;
     }
@@ -687,15 +711,13 @@ $small-breakpoint: 960px;
     justify-content: center;
     align-items: center;
     padding: 50px;
-    font-family: $font-display, sans-serif;
-    font-weight: bold;
 
-    svg {
+    .logo {
       fill: $primary-text-color;
       height: 52px;
     }
 
-    @media screen and (max-width: $no-gap-breakpoint) {
+    @media screen and (max-width: $no-gap-breakpoint-static) {
       padding: 0;
       margin-bottom: 30px;
     }
@@ -820,7 +842,7 @@ $small-breakpoint: 960px;
       }
     }
 
-    @media screen and (max-width: $no-gap-breakpoint) {
+    @media screen and (max-width: $no-gap-breakpoint-static) {
       grid-gap: 0;
 
       .hero-widget {
@@ -865,22 +887,6 @@ $small-breakpoint: 960px;
 .brand {
   position: relative;
   text-decoration: none;
-  color: $secondary-text-color;
-}
-
-a.brand {
-  color: $primary-text-color;
-}
-
-h1 a.brand {
-  color: $secondary-text-color;
-  font-size: 3.8em;
-}
-
-.originalmascotimg svg {
-  width: 200px;
-  fill: $secondary-text-color;
-  margin-top: -25px;
 }
 
 .brand__tagline {
@@ -893,7 +899,7 @@ h1 a.brand {
   text-decoration: none;
   font-size: 14px;
 
-  @media screen and (max-width: $no-gap-breakpoint) {
+  @media screen and (max-width: $no-gap-breakpoint-static) {
     position: static;
     width: auto;
     margin-top: 20px;

@@ -17,6 +17,7 @@ class ColumnHeader extends React.PureComponent {
 
   static contextTypes = {
     router: PropTypes.object,
+    identity: PropTypes.object,
   };
 
   static propTypes = {
@@ -56,7 +57,7 @@ class ColumnHeader extends React.PureComponent {
   }
 
   handleTitleClick = () => {
-    this.props.onClick();
+    this.props.onClick?.();
   }
 
   handleMoveLeft = () => {
@@ -104,7 +105,7 @@ class ColumnHeader extends React.PureComponent {
       'active': !collapsed,
     });
 
-    let extraContent, pinButton, moveButtons, backButton, collapseButton;
+    let extraContent, pinButton, moveButtons, backButton, collapseButton, signInButton;
 
     if (children) {
       extraContent = (
@@ -145,13 +146,25 @@ class ColumnHeader extends React.PureComponent {
       collapsedContent.push(moveButtons);
     }
 
-    if (children || (multiColumn && this.props.onPin)) {
+    if (this.context.identity.signedIn) {
+      signInButton = (
+        <>
+        </>
+      );
+    } else {
+      signInButton = (
+        <div class='ui__header__links'>
+          <a href='/auth/sign_in' className='button'><FormattedMessage id='sign_in_banner.sign_in' defaultMessage='Sign in' /></a>
+        </div>
+      );
+    }
+
+    if (this.context.identity.signedIn && (children || (multiColumn && this.props.onPin))) {
       collapseButton = (
         <button
           className={collapsibleButtonClassName}
           title={formatMessage(collapsed ? messages.show : messages.hide)}
           aria-label={formatMessage(collapsed ? messages.show : messages.hide)}
-          aria-pressed={collapsed ? 'false' : 'true'}
           onClick={this.handleToggleClick}
         >
           <i className='icon-with-badge'>
@@ -180,6 +193,7 @@ class ColumnHeader extends React.PureComponent {
             {hasTitle && backButton}
             {extraButton}
             {collapseButton}
+            {signInButton}
           </div>
         </h1>
 
