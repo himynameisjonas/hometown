@@ -56,7 +56,7 @@ services:
 
   web:
     build: .
-    image: cyborch/mastodon:v4.0.2-hometown-1.1.0
+    image: himynameisjonas/hometown:latest
     restart: always
     env_file:
       - .env.production
@@ -89,7 +89,7 @@ services:
 
   streaming:
     build: .
-    image: cyborch/mastodon:v4.0.2-hometown-1.1.0
+    image: himynameisjonas/hometown:latest
     restart: always
     env_file:
       - .env.production
@@ -121,7 +121,7 @@ services:
 
   sidekiq:
     build: .
-    image: cyborch/mastodon:v4.0.2-hometown-1.1.0
+    image: himynameisjonas/hometown:latest
     restart: always
     env_file:
       - .env.production
