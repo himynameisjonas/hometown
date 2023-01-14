@@ -56,7 +56,7 @@ services:
 
   web:
     build: .
-    image: himynameisjonas/hometown:latest
+    image: himynameisjonas/hometown:edge
     restart: always
     env_file:
       - .env.production
@@ -89,7 +89,7 @@ services:
 
   streaming:
     build: .
-    image: himynameisjonas/hometown:latest
+    image: himynameisjonas/hometown:edge
     restart: always
     env_file:
       - .env.production
@@ -121,7 +121,7 @@ services:
 
   sidekiq:
     build: .
-    image: himynameisjonas/hometown:latest
+    image: himynameisjonas/hometown:edge
     restart: always
     env_file:
       - .env.production
