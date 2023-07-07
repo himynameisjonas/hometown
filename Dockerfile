@@ -7,8 +7,23 @@ FROM node:${NODE_VERSION} as build
 
 COPY --link --from=ruby /opt/ruby /opt/ruby
 
-ENV DEBIAN_FRONTEND="noninteractive" \
-	PATH="${PATH}:/opt/ruby/bin"
+# Install Ruby 3.0
+ENV RUBY_VER="3.0.6"
+RUN apt-get update && \
+	apt-get install -y --no-install-recommends build-essential \
+	bison libyaml-dev libgdbm-dev libreadline-dev libjemalloc-dev \
+	libncurses5-dev libffi-dev zlib1g-dev libssl-dev && \
+	cd ~ && \
+	wget https://cache.ruby-lang.org/pub/ruby/${RUBY_VER%.*}/ruby-$RUBY_VER.tar.gz && \
+	tar xf ruby-$RUBY_VER.tar.gz && \
+	cd ruby-$RUBY_VER && \
+	./configure --prefix=/opt/ruby \
+	--with-jemalloc \
+	--with-shared \
+	--disable-install-doc && \
+	make -j"$(nproc)" > /dev/null && \
+	make install && \
+	rm -rf ../ruby-$RUBY_VER.tar.gz ../ruby-$RUBY_VER
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
