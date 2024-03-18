@@ -6,10 +6,10 @@ services:
     shm_size: 256mb
     networks:
       - internal_network
-    healthcheck:
-      test: ['CMD', 'pg_isready', '-U', 'postgres']
     volumes:
       - ./postgres14:/var/lib/postgresql/data
+    # added from the default, otherwise you'll need to manually create a `mastodon` db and user/role
+    env_file: db.env
     environment:
       - 'POSTGRES_HOST_AUTH_METHOD=trust'
 
@@ -19,7 +19,7 @@ services:
     networks:
       - internal_network
     healthcheck:
-      test: ['CMD', 'redis-cli', 'ping']
+      test: [ 'CMD', 'redis-cli', 'ping' ]
     volumes:
       - ./redis:/data
 
@@ -56,78 +56,91 @@ services:
 
   web:
     build: .
-    image: ghcr.io/mastodon/mastodon:v4.2.8
+    image: himynameisjonas/hometown:edge
     restart: always
-    env_file: .env.production
+    env_file:
+      - .env.production
+      - db.env
     command: bash -c "rm -f /mastodon/tmp/pids/server.pid; bundle exec rails s -p 3000"
     networks:
-      - external_network
+      - traefik_proxy
       - internal_network
     healthcheck:
       # prettier-ignore
-      test: ['CMD-SHELL', 'wget -q --spider --proxy=off localhost:3000/health || exit 1']
-    ports:
-      - '127.0.0.1:3000:3000'
+      test:
+        [
+          'CMD-SHELL',
+          'wget -q --spider --proxy=off localhost:3000/health || exit 1'
+        ]
+    expose:
+      - "3000"
     depends_on:
       - db
       - redis
-      # - es
     volumes:
       - ./public/system:/mastodon/public/system
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=traefik_proxy
+      - traefik.http.routers.mastodonweb.rule=Host(`tacocat.space`)
+      - traefik.http.routers.mastodonweb.entrypoints=websecure
+      - traefik.http.routers.mastodonweb.tls.certresolver=letsencrypttls
+      - traefik.http.services.mastodonweb.loadbalancer.server.port=3000
 
   streaming:
     build: .
-    image: ghcr.io/mastodon/mastodon:v4.2.8
+    image: himynameisjonas/hometown:edge
     restart: always
-    env_file: .env.production
+    env_file:
+      - .env.production
+      - db.env
     command: node ./streaming
     networks:
-      - external_network
+      - traefik_proxy
       - internal_network
     healthcheck:
       # prettier-ignore
-      test: ['CMD-SHELL', 'wget -q --spider --proxy=off localhost:4000/api/v1/streaming/health || exit 1']
-    ports:
-      - '127.0.0.1:4000:4000'
+      test:
+        [
+          'CMD-SHELL',
+          'wget -q --spider --proxy=off localhost:4000/api/v1/streaming/health || exit 1'
+        ]
+    expose:
+      - "4000"
+
     depends_on:
       - db
       - redis
+    labels:
+      - traefik.enable=true
+      - traefik.docker.network=traefik_proxy
+      - traefik.http.routers.mastodonstreaming.rule=(Host(`tacocat.space`) && PathPrefix(`/api/v1/streaming`))
+      - traefik.http.routers.mastodonstreaming.entrypoints=websecure
+      - traefik.http.routers.mastodonstreaming.tls.certresolver=letsencrypttls
+      - traefik.http.services.mastodonstreaming.loadbalancer.server.port=4000
 
   sidekiq:
     build: .
-    image: ghcr.io/mastodon/mastodon:v4.2.8
+    image: himynameisjonas/hometown:edge
     restart: always
-    env_file: .env.production
+    env_file:
+      - .env.production
+      - db.env
     command: bundle exec sidekiq
     depends_on:
       - db
       - redis
     networks:
-      - external_network
+      - traefik_proxy
       - internal_network
     volumes:
       - ./public/system:/mastodon/public/system
     healthcheck:
-      test: ['CMD-SHELL', "ps aux | grep '[s]idekiq\ 6' || false"]
-
-  ## Uncomment to enable federation with tor instances along with adding the following ENV variables
-  ## http_proxy=http://privoxy:8118
-  ## ALLOW_ACCESS_TO_HIDDEN_SERVICE=true
-  # tor:
-  #   image: sirboops/tor
-  #   networks:
-  #      - external_network
-  #      - internal_network
-  #
-  # privoxy:
-  #   image: sirboops/privoxy
-  #   volumes:
-  #     - ./priv-config:/opt/config
-  #   networks:
-  #     - external_network
-  #     - internal_network
+      test: [ 'CMD-SHELL', "ps aux | grep '[s]idekiq 6' || false" ]
 
 networks:
-  external_network:
+  #the network that your traefik instance has access to
+  traefik_proxy:
+    external: true
   internal_network:
     internal: true
