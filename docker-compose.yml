@@ -7,7 +7,7 @@ services:
     networks:
       - internal_network
     volumes:
-      - ./postgres14:/var/lib/postgresql/data
+      - /mnt/HC_Volume_100097144/postgres14:/var/lib/postgresql/data
     # added from the default, otherwise you'll need to manually create a `mastodon` db and user/role
     env_file: db.env
     environment:
