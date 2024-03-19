@@ -1800,6 +1800,8 @@ en:
     mastodon-light: Mastodon (Light)
     macaron: Macaron (Pastel light)
     fairy-floss: Fairy Floss (Pastel dark)
+    tangerineui: Tangerine UI
+    tangerineui-purple: Tangerine UI (Purple)
   time:
     formats:
       default: "%b %d, %Y, %H:%M"
