@@ -13,7 +13,7 @@ module Mastodon
     end
 
     def patch
-      8
+      10
     end
 
     def default_prerelease
@@ -28,6 +28,10 @@ module Mastodon
       ENV.fetch('MASTODON_VERSION_METADATA', nil)
     end
 
+    def hometown_version
+      'hometown-1.1.1'
+    end
+
     def to_a
       [major, minor, patch].compact
     end
@@ -36,6 +40,7 @@ module Mastodon
       components = [to_a.join('.')]
       components << "-#{prerelease}" if prerelease.present?
       components << "+#{build_metadata}" if build_metadata.present?
+      components << "+#{hometown_version}"
       components.join
     end
 
