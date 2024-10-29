@@ -12,6 +12,10 @@ services:
     env_file: db.env
     environment:
       - 'POSTGRES_HOST_AUTH_METHOD=trust'
+    logging:
+      options:
+        max-size: '10m'
+        max-file: '3'
 
   redis:
     restart: always
@@ -22,6 +26,10 @@ services:
       test: [ 'CMD', 'redis-cli', 'ping' ]
     volumes:
       - ./redis:/data
+    logging:
+      options:
+        max-size: '10m'
+        max-file: '3'
 
   # es:
   #   restart: always
@@ -86,6 +94,10 @@ services:
       - traefik.http.routers.mastodonweb.entrypoints=websecure
       - traefik.http.routers.mastodonweb.tls.certresolver=letsencrypttls
       - traefik.http.services.mastodonweb.loadbalancer.server.port=3000
+    logging:
+      options:
+        max-size: '10m'
+        max-file: '3'
 
   streaming:
     build: .
@@ -118,6 +130,10 @@ services:
       - traefik.http.routers.mastodonstreaming.entrypoints=websecure
       - traefik.http.routers.mastodonstreaming.tls.certresolver=letsencrypttls
       - traefik.http.services.mastodonstreaming.loadbalancer.server.port=4000
+    logging:
+      options:
+        max-size: '10m'
+        max-file: '3'
 
   sidekiq:
     build: .
@@ -137,6 +153,10 @@ services:
       - ./public/system:/mastodon/public/system
     healthcheck:
       test: [ 'CMD-SHELL', "ps aux | grep '[s]idekiq 6' || false" ]
+    logging:
+      options:
+        max-size: '10m'
+        max-file: '3'
 
 networks:
   #the network that your traefik instance has access to
